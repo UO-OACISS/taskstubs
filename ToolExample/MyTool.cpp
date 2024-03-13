@@ -3,6 +3,8 @@
 #include <set>
 #include <map>
 #include <sstream>
+#include <dlfcn.h>
+#include <cxxabi.h>
 
 #include "TimerPlugin/TaskTimer.hpp"
 
@@ -16,7 +18,14 @@ class MyTimer {
         std::set<uint64_t> mChildren;
         std::string label() {
             if (hasName) return mName;
-            return std::to_string(mAddress);
+            //return std::to_string(mAddress);
+            Dl_info this_fn_info;
+            if (dladdr((const void*)(mAddress), &this_fn_info)) {
+                int status = 0;
+                mName = abi::__cxa_demangle(this_fn_info.dli_sname,0,0,&status);
+                hasName = true;
+                return mName;
+            }
         }
         std::string printSet(const std::set<uint64_t>& inSet) {
             std::stringstream ss;

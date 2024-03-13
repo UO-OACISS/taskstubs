@@ -5,6 +5,8 @@ project(plugin CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 #add_compile_options(-Wno-return-type-c-linkage)
+add_compile_options(-fPIC)
+set(CMAKE_EXE_LINKER_FLAGS -rdynamic)
 
 add_subdirectory(TimerPlugin)
 add_subdirectory(ToolExample)
