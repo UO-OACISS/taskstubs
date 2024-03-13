@@ -19,6 +19,25 @@ ctest --test-dir build --verbose
 ...which should look like:
 
 ```
+khuck@saturn:~/src/taskStubs$ cmake -B build && cmake --build build --parallel
+-- The CXX compiler identification is GNU 9.4.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/users/khuck/src/taskStubs/build
+[ 33%] Building CXX object ToolExample/CMakeFiles/MyTool.dir/MyTool.cpp.o
+[ 33%] Building CXX object TimerPlugin/CMakeFiles/TimerPlugin.dir/Plugin.cpp.o
+[ 50%] Linking CXX static library libTimerPlugin.a
+[ 50%] Built target TimerPlugin
+[ 66%] Building CXX object CMakeFiles/main.dir/main.cpp.o
+[ 83%] Linking CXX shared library libMyTool.so
+[ 83%] Built target MyTool
+[100%] Linking CXX executable main
+[100%] Built target main
 khuck@saturn:~/src/taskStubs$ ctest --test-dir build --verbose
 Internal ctest changing into directory: /home/users/khuck/src/taskStubs/build
 UpdateCTestConfiguration  from :/home/users/khuck/src/taskStubs/build/DartConfiguration.tcl
