@@ -24,8 +24,8 @@ class MyTimer {
                 int status = 0;
                 mName = abi::__cxa_demangle(this_fn_info.dli_sname,0,0,&status);
                 hasName = true;
-                return mName;
             }
+            return mName;
         }
         std::string printSet(const std::set<uint64_t>& inSet) {
             std::stringstream ss;
