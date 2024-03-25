@@ -20,10 +20,10 @@ target_link_libraries(main_c TimerPlugin)
 enable_testing()
 add_test(NAME testWithout_cpp COMMAND main_cpp)
 add_test(NAME testWith_cpp COMMAND main_cpp)
-set_property(TEST testWith_cpp PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/ToolExample/libMyTool${CMAKE_SHARED_LIBRARY_SUFFIX}")
+set_property(TEST testWith_cpp PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/ToolExample/libMyToolCPP${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 add_test(NAME testWithout_c COMMAND main_c)
 add_test(NAME testWith_c COMMAND main_c)
-set_property(TEST testWith_c PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/ToolExample/libMyTool${CMAKE_SHARED_LIBRARY_SUFFIX}")
+set_property(TEST testWith_c PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/ToolExample/libMyToolC${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 

@@ -1,4 +1,3 @@
-#pragma once
 #include "tasktimer.h"
 #include "TaskTimer.hpp"
 

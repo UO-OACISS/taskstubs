@@ -24,7 +24,7 @@ static char* label(my_timer_t* t) {
     if (dladdr((const void*)(t->mAddress), &this_fn_info)) {
         int status = 0;
         t->mName = strdup(this_fn_info.dli_sname);
-        t->hasName = true;
+        t->hasName = 1;
     }
     return t->mName;
 }
@@ -33,13 +33,13 @@ static char* printSet(const uint64_t* inSet, const uint64_t count) {
     char ss[1024] = {"["};
     int first = 1;
     for (uint64_t i = 0 ; i < count ; i++) {
-        if (first == 0) strncat(ss, ",", 1);
+        if (first == 0) strcat(ss, ",");
         char tmp[64];
         sprintf(tmp, "%" PRId64 "", inSet[i]);
         strncat(ss, tmp, strlen(tmp));
         first = 0;
     }
-    strncat(ss, "]", 1);
+    strcat(ss, "]");
     return strdup(ss);
 }
 
