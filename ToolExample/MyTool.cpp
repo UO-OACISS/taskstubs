@@ -22,7 +22,12 @@ class MyTimer {
             Dl_info this_fn_info;
             if (dladdr((const void*)(mAddress), &this_fn_info)) {
                 int status = 0;
-                mName = abi::__cxa_demangle(this_fn_info.dli_sname,0,0,&status);
+                char* tmp = abi::__cxa_demangle(this_fn_info.dli_sname,0,0,&status);
+                if (status == 0) {
+                    mName = std::string(tmp);
+                } else {
+                    mName = std::string(this_fn_info.dli_sname) + "()";
+                }
                 hasName = true;
             }
             return mName;
@@ -108,50 +113,50 @@ class MyTimer {
 std::map<uint64_t,MyTimer*> MyTimer::knownTimers;
 
 extern "C" {
-std::shared_ptr<void> tasktimer_create_string(const std::string name, const uint64_t id,
+std::shared_ptr<void> tasktimer_impl_create_string(const std::string name, const uint64_t id,
     const std::set<uint64_t>& parents) {
     std::shared_ptr<MyTimer> tmp = std::make_shared<MyTimer>(name,id,parents);
     return tmp;
 }
 
-std::shared_ptr<void> tasktimer_create_address(const uintptr_t address, const uint64_t id,
+std::shared_ptr<void> tasktimer_impl_create_address(const uintptr_t address, const uint64_t id,
     const std::set<uint64_t>& parents) {
     std::shared_ptr<MyTimer> tmp = std::make_shared<MyTimer>(address,id,parents);
     return tmp;
 }
 
-void tasktimer_schedule(const std::shared_ptr<void> taskTimer) {
+void tasktimer_impl_schedule(const std::shared_ptr<void> taskTimer) {
     auto tmp = std::static_pointer_cast<MyTimer>(taskTimer);
     tmp->schedule();
 }
 
-void tasktimer_start(const std::shared_ptr<void> taskTimer) {
+void tasktimer_impl_start(const std::shared_ptr<void> taskTimer) {
     auto tmp = std::static_pointer_cast<MyTimer>(taskTimer);
     tmp->start();
 }
 
-void tasktimer_yield(const std::shared_ptr<void> taskTimer) {
+void tasktimer_impl_yield(const std::shared_ptr<void> taskTimer) {
     auto tmp = std::static_pointer_cast<MyTimer>(taskTimer);
     tmp->yield();
 }
 
-void tasktimer_resume(const std::shared_ptr<void> taskTimer) {
+void tasktimer_impl_resume(const std::shared_ptr<void> taskTimer) {
     auto tmp = std::static_pointer_cast<MyTimer>(taskTimer);
     tmp->resume();
 }
 
-void tasktimer_stop(const std::shared_ptr<void> taskTimer) {
+void tasktimer_impl_stop(const std::shared_ptr<void> taskTimer) {
     auto tmp = std::static_pointer_cast<MyTimer>(taskTimer);
     tmp->stop();
 }
 
-void tasktimer_add_parents(const std::shared_ptr<void> taskTimer,
+void tasktimer_impl_add_parents(const std::shared_ptr<void> taskTimer,
     const std::set<uint64_t>& parents) {
     auto tmp = std::static_pointer_cast<MyTimer>(taskTimer);
     tmp->addParents(parents);
 }
 
-void tasktimer_add_children(const std::shared_ptr<void> taskTimer,
+void tasktimer_impl_add_children(const std::shared_ptr<void> taskTimer,
     const std::set<uint64_t>& children) {
     auto tmp = std::static_pointer_cast<MyTimer>(taskTimer);
     tmp->addChildren(children);

@@ -1,5 +1,5 @@
 #include "Plugin.hpp"
-#include "ToolAPI.hpp"
+#include "tool_api.h"
 #include <dlfcn.h>
 #include <string>
 #include <iostream>
@@ -58,58 +58,58 @@ void* Plugin::getSymbol(const char * symbol) {
 
 std::shared_ptr<void> Plugin::create(const std::string name, const uint64_t id,
     const std::set<uint64_t>& parents) {
-    static auto func{GET_FUNCTION_POINTER(tasktimer_create_string)};
+    static auto func{GET_FUNCTION_POINTER(tasktimer_impl_create_string)};
     if (func == nullptr) return nullptr;
     return func(name, id, parents);
 }
 
 std::shared_ptr<void> Plugin::create(const uintptr_t address, const uint64_t id,
     const std::set<uint64_t>& parents) {
-    static auto func{GET_FUNCTION_POINTER(tasktimer_create_address)};
+    static auto func{GET_FUNCTION_POINTER(tasktimer_impl_create_address)};
     if (func == nullptr) return nullptr;
     return func(address, id, parents);
 }
 
 void Plugin::schedule(std::shared_ptr<void> externalTimer) {
-    static auto func{GET_FUNCTION_POINTER(tasktimer_schedule)};
+    static auto func{GET_FUNCTION_POINTER(tasktimer_impl_schedule)};
     if (func == nullptr) return;
     func(externalTimer);
 }
 
 void Plugin::start(std::shared_ptr<void> externalTimer) {
-    static auto func{GET_FUNCTION_POINTER(tasktimer_start)};
+    static auto func{GET_FUNCTION_POINTER(tasktimer_impl_start)};
     if (func == nullptr) return;
     func(externalTimer);
 }
 
 void Plugin::yield(std::shared_ptr<void> externalTimer) {
-    static auto func{GET_FUNCTION_POINTER(tasktimer_yield)};
+    static auto func{GET_FUNCTION_POINTER(tasktimer_impl_yield)};
     if (func == nullptr) return;
     func(externalTimer);
 }
 
 void Plugin::resume(std::shared_ptr<void> externalTimer) {
-    static auto func{GET_FUNCTION_POINTER(tasktimer_resume)};
+    static auto func{GET_FUNCTION_POINTER(tasktimer_impl_resume)};
     if (func == nullptr) return;
     func(externalTimer);
 }
 
 void Plugin::stop(std::shared_ptr<void> externalTimer) {
-    static auto func{GET_FUNCTION_POINTER(tasktimer_stop)};
+    static auto func{GET_FUNCTION_POINTER(tasktimer_impl_stop)};
     if (func == nullptr) return;
     func(externalTimer);
 }
 
 void Plugin::addParents(std::shared_ptr<void> externalTimer,
     const std::set<uint64_t>& parents) {
-    static auto func{GET_FUNCTION_POINTER(tasktimer_add_parents)};
+    static auto func{GET_FUNCTION_POINTER(tasktimer_impl_add_parents)};
     if (func == nullptr) return;
     func(externalTimer, parents);
 }
 
 void Plugin::addChildren(std::shared_ptr<void> externalTimer,
     const std::set<uint64_t>& children) {
-    static auto func{GET_FUNCTION_POINTER(tasktimer_add_children)};
+    static auto func{GET_FUNCTION_POINTER(tasktimer_impl_add_children)};
     if (func == nullptr) return;
     func(externalTimer, children);
 }

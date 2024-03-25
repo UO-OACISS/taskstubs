@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "TimerPlugin/TaskTimer.hpp"
 
 void A(void);
