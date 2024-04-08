@@ -29,16 +29,18 @@ typedef void tasktimer_add_children_t(tasktimer_timer_t, const tasktimer_guid_t*
 #define PLUGIN_INTERFACE
 #endif
 
-/* Function declarations */
-PLUGIN_INTERFACE tasktimer_initialize_t tasktimer_impl_initialize;
-PLUGIN_INTERFACE tasktimer_finalize_t tasktimer_impl_finalize;
-PLUGIN_INTERFACE tasktimer_create_t tasktimer_impl_create;
-PLUGIN_INTERFACE tasktimer_schedule_t tasktimer_impl_schedule;
-PLUGIN_INTERFACE tasktimer_start_t tasktimer_impl_start;
-PLUGIN_INTERFACE tasktimer_yield_t tasktimer_impl_yield;
-PLUGIN_INTERFACE tasktimer_resume_t tasktimer_impl_resume;
-PLUGIN_INTERFACE tasktimer_stop_t tasktimer_impl_stop;
-PLUGIN_INTERFACE tasktimer_destroy_t tasktimer_impl_destroy;
-PLUGIN_INTERFACE tasktimer_add_parents_t tasktimer_impl_add_parents;
-PLUGIN_INTERFACE tasktimer_add_children_t tasktimer_impl_add_children;
+/* Function declarations:
+   the plugin loader will look for these, and
+   the tool should implement them. */
+PLUGIN_INTERFACE tasktimer_initialize_t tasktimer_initialize_impl;
+PLUGIN_INTERFACE tasktimer_finalize_t tasktimer_finalize_impl;
+PLUGIN_INTERFACE tasktimer_create_t tasktimer_create_impl;
+PLUGIN_INTERFACE tasktimer_schedule_t tasktimer_schedule_impl;
+PLUGIN_INTERFACE tasktimer_start_t tasktimer_start_impl;
+PLUGIN_INTERFACE tasktimer_yield_t tasktimer_yield_impl;
+PLUGIN_INTERFACE tasktimer_resume_t tasktimer_resume_impl;
+PLUGIN_INTERFACE tasktimer_stop_t tasktimer_stop_impl;
+PLUGIN_INTERFACE tasktimer_destroy_t tasktimer_destroy_impl;
+PLUGIN_INTERFACE tasktimer_add_parents_t tasktimer_add_parents_impl;
+PLUGIN_INTERFACE tasktimer_add_children_t tasktimer_add_children_impl;
 

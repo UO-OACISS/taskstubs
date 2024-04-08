@@ -114,57 +114,57 @@ static void add_children(my_timer_t* timer, const uint64_t* children, const uint
     printf("Timer %s adding children %s\n", label(timer), printSet(timer->mChildren, count));
 }
 
-void tasktimer_impl_initialize(void) {
+void tasktimer_initialize_impl(void) {
     init();
 }
 
-void tasktimer_impl_finalize(void) {
+void tasktimer_finalize_impl(void) {
     finalize();
 }
 
-tasktimer_timer_t tasktimer_impl_create(const tasktimer_function_pointer_t address,
+tasktimer_timer_t tasktimer_create_impl(const tasktimer_function_pointer_t address,
     const char* name, const uint64_t id, const uint64_t* parents,
     const uint64_t count) {
     my_timer_t* tmp = create_mytimer(address, name, id, parents, count);
     return tmp;
 }
 
-void tasktimer_impl_destroy(tasktimer_timer_t timer) {
+void tasktimer_destroy_impl(tasktimer_timer_t timer) {
     free(timer);
 }
 
-void tasktimer_impl_schedule(tasktimer_timer_t in_timer) {
+void tasktimer_schedule_impl(tasktimer_timer_t in_timer) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     schedule(timer);
 }
 
-void tasktimer_impl_start(tasktimer_timer_t in_timer) {
+void tasktimer_start_impl(tasktimer_timer_t in_timer) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     start(timer);
 }
 
-void tasktimer_impl_yield(tasktimer_timer_t in_timer) {
+void tasktimer_yield_impl(tasktimer_timer_t in_timer) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     yield(timer);
 }
 
-void tasktimer_impl_resume(tasktimer_timer_t in_timer) {
+void tasktimer_resume_impl(tasktimer_timer_t in_timer) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     resume(timer);
 }
 
-void tasktimer_impl_stop(tasktimer_timer_t in_timer) {
+void tasktimer_stop_impl(tasktimer_timer_t in_timer) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     stop(timer);
 }
 
-void tasktimer_impl_add_parents(tasktimer_timer_t in_timer,
+void tasktimer_add_parents_impl(tasktimer_timer_t in_timer,
     const uint64_t* parents, const uint64_t count) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     add_parents(timer, parents, count);
 }
 
-void tasktimer_impl_add_children(tasktimer_timer_t in_timer,
+void tasktimer_add_children_impl(tasktimer_timer_t in_timer,
     const uint64_t* children, const uint64_t count) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     add_children(timer, children, count);

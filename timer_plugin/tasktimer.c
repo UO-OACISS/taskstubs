@@ -18,22 +18,22 @@ tasktimer_add_children_t* tasktimer_add_children_func = NULL;
 
 void tasktimer_initialize(void) {
     ECHO
-    tasktimer_initialize_func = (tasktimer_initialize_t*)(GET_SYMBOL(tasktimer_impl_initialize));
+    tasktimer_initialize_func = (tasktimer_initialize_t*)(GET_SYMBOL(tasktimer_initialize_impl));
     if (tasktimer_initialize_func == NULL) {
         return;
     }
     tasktimer_initialize_func();
     /* Assign the function pointers */
-    tasktimer_finalize_func = (tasktimer_finalize_t*)(GET_SYMBOL(tasktimer_impl_finalize));
-    tasktimer_create_func = (tasktimer_create_t*)(GET_SYMBOL(tasktimer_impl_create));
-    tasktimer_schedule_func = (tasktimer_schedule_t*)(GET_SYMBOL(tasktimer_impl_schedule));
-    tasktimer_start_func = (tasktimer_start_t*)(GET_SYMBOL(tasktimer_impl_start));
-    tasktimer_yield_func = (tasktimer_yield_t*)(GET_SYMBOL(tasktimer_impl_yield));
-    tasktimer_resume_func = (tasktimer_resume_t*)(GET_SYMBOL(tasktimer_impl_resume));
-    tasktimer_stop_func = (tasktimer_stop_t*)(GET_SYMBOL(tasktimer_impl_stop));
-    tasktimer_destroy_func = (tasktimer_destroy_t*)(GET_SYMBOL(tasktimer_impl_destroy));
-    tasktimer_add_parents_func = (tasktimer_add_parents_t*)(GET_SYMBOL(tasktimer_impl_add_parents));
-    tasktimer_add_children_func = (tasktimer_add_children_t*)(GET_SYMBOL(tasktimer_impl_add_children));
+    tasktimer_finalize_func = (tasktimer_finalize_t*)(GET_SYMBOL(tasktimer_finalize_impl));
+    tasktimer_create_func = (tasktimer_create_t*)(GET_SYMBOL(tasktimer_create_impl));
+    tasktimer_schedule_func = (tasktimer_schedule_t*)(GET_SYMBOL(tasktimer_schedule_impl));
+    tasktimer_start_func = (tasktimer_start_t*)(GET_SYMBOL(tasktimer_start_impl));
+    tasktimer_yield_func = (tasktimer_yield_t*)(GET_SYMBOL(tasktimer_yield_impl));
+    tasktimer_resume_func = (tasktimer_resume_t*)(GET_SYMBOL(tasktimer_resume_impl));
+    tasktimer_stop_func = (tasktimer_stop_t*)(GET_SYMBOL(tasktimer_stop_impl));
+    tasktimer_destroy_func = (tasktimer_destroy_t*)(GET_SYMBOL(tasktimer_destroy_impl));
+    tasktimer_add_parents_func = (tasktimer_add_parents_t*)(GET_SYMBOL(tasktimer_add_parents_impl));
+    tasktimer_add_children_func = (tasktimer_add_children_t*)(GET_SYMBOL(tasktimer_add_children_impl));
 }
 
 void tasktimer_finalize(void) {
