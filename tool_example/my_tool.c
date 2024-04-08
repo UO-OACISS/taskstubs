@@ -1,16 +1,16 @@
-#include "TimerPlugin/tool_api.h"
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include "tool_api.h"
 
 typedef struct my_timer {
         char* mName;
         uint64_t mID;
         int hasName;
-        uintptr_t mAddress;
+        const void* mAddress;
         /* This is a dumb example with fixed lengths for parents, children */
         uint64_t mParents[32];
         uint64_t mParentCount;
@@ -45,17 +45,24 @@ static char* printSet(const uint64_t* inSet, const uint64_t count) {
 
 /* not that sophisticated, just append the new set to the old set */
 static uint64_t merge_set(uint64_t* old_set, uint64_t old_count, const uint64_t* new_set, const uint64_t new_count) {
-    for(uint64_t i = 0 ; i < new_count ; i++) {
-        old_set[old_count + i] = new_set[i];
+    if (new_count > 0) {
+        for(uint64_t i = 0 ; i < new_count ; i++) {
+            old_set[old_count + i] = new_set[i];
+        }
     }
     return old_count + new_count;
 }
 
-static my_timer_t* mytimer_string(const char* name, const uint64_t id,
-            const uint64_t* parents, const uint64_t count) {
+static my_timer_t* create_mytimer(const void* address, const char* name,
+    const uint64_t id, const uint64_t* parents, const uint64_t count) {
     my_timer_t* timer = (my_timer_t*)malloc(sizeof(my_timer_t));
-    timer->mName = strdup(name);
-    timer->hasName = 1;
+    timer->mAddress = address;
+    if (name != NULL && strlen(name) > 0) {
+        timer->mName = strdup(name);
+        timer->hasName = 1;
+    } else {
+        timer->hasName = 0;
+    }
     timer->mID = id;
     timer->mParentCount = merge_set(timer->mParents, 0, parents, count);
     printf("Created timer %s with ID %" PRId64 " and parents %s\n",
@@ -63,16 +70,12 @@ static my_timer_t* mytimer_string(const char* name, const uint64_t id,
     return timer;
 }
 
-static my_timer_t* mytimer_address(const uintptr_t address, const uint64_t id,
-            const uint64_t* parents, const uint64_t count) {
-    my_timer_t* timer = (my_timer_t*)malloc(sizeof(my_timer_t));
-    timer->mAddress = address;
-    timer->hasName = 0;
-    timer->mID = id;
-    timer->mParentCount = merge_set(timer->mParents, 0, parents, count);
-    printf("Created timer %s with ID %" PRId64 " and parents %s\n",
-        label(timer), timer->mID, printSet(timer->mParents, timer->mParentCount));
-    return timer;
+static void init(void) {
+    printf("Initializing tool\n");
+}
+
+static void finalize(void) {
+    printf("Finalizing tool\n");
 }
 
 static void schedule(my_timer_t* timer) {
@@ -105,50 +108,57 @@ static void add_children(my_timer_t* timer, const uint64_t* children, const uint
     printf("Timer %s adding children %s\n", label(timer), printSet(timer->mChildren, count));
 }
 
-void* tasktimer_impl_create_string(const char* name, const uint64_t id,
-    const uint64_t* parents, const uint64_t count) {
-    my_timer_t* tmp = mytimer_string(name, id, parents, count);
+void tasktimer_impl_initialize(void) {
+    init();
+}
+
+void tasktimer_impl_finalize(void) {
+    finalize();
+}
+
+tasktimer_timer_t tasktimer_impl_create(const tasktimer_function_pointer_t address,
+    const char* name, const uint64_t id, const uint64_t* parents,
+    const uint64_t count) {
+    my_timer_t* tmp = create_mytimer(address, name, id, parents, count);
     return tmp;
 }
 
-void* tasktimer_impl_create_address(const uintptr_t address, const uint64_t id,
-    const uint64_t* parents, const uint64_t count) {
-    my_timer_t* tmp = mytimer_address(address, id, parents, count);
-    return tmp;
+void tasktimer_impl_destroy(tasktimer_timer_t timer) {
+    free(timer);
 }
 
-void tasktimer_impl_schedule(void* in_timer) {
+void tasktimer_impl_schedule(tasktimer_timer_t in_timer) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     schedule(timer);
 }
 
-void tasktimer_impl_start(void* in_timer) {
+void tasktimer_impl_start(tasktimer_timer_t in_timer) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     start(timer);
 }
 
-void tasktimer_impl_yield(void* in_timer) {
+void tasktimer_impl_yield(tasktimer_timer_t in_timer) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     yield(timer);
 }
 
-void tasktimer_impl_resume(void* in_timer) {
+void tasktimer_impl_resume(tasktimer_timer_t in_timer) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     resume(timer);
 }
 
-void tasktimer_impl_stop(void* in_timer) {
+void tasktimer_impl_stop(tasktimer_timer_t in_timer) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     stop(timer);
 }
 
-void tasktimer_impl_add_parents(void* in_timer,
+void tasktimer_impl_add_parents(tasktimer_timer_t in_timer,
     const uint64_t* parents, const uint64_t count) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     add_parents(timer, parents, count);
 }
 
-void tasktimer_impl_add_children(void* in_timer,
+void tasktimer_impl_add_children(tasktimer_timer_t in_timer,
     const uint64_t* children, const uint64_t count) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     add_children(timer, children, count);
