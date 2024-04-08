@@ -10,7 +10,12 @@ enable_testing()
 
 include_directories(${CMAKE_SOURCE_DIR}/timer_plugin)
 
+# This directory has the timer instrumentation API that a library will use to instrument itself
 add_subdirectory(timer_plugin)
+
+# This directory has a demonstration tool that a measurement library would implement
 add_subdirectory(tool_example)
+
+# This directory has simple examples
 add_subdirectory(examples)
 
