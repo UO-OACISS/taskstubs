@@ -29,6 +29,11 @@ static char* label(my_timer_t* t) {
     return t->mName;
 }
 
+#define my_min(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a < _b ? _a : _b; })
+
 static char* printSet(const uint64_t* inSet, const uint64_t count) {
     char ss[1024] = {"["};
     int first = 1;
@@ -36,7 +41,8 @@ static char* printSet(const uint64_t* inSet, const uint64_t count) {
         if (first == 0) strcat(ss, ",");
         char tmp[64];
         sprintf(tmp, "%" PRId64 "", inSet[i]);
-        strncat(ss, tmp, strlen(tmp));
+        int minlen = my_min(1024 - strlen(ss), strlen(tmp));
+        strncat(ss, tmp, minlen);
         first = 0;
     }
     strcat(ss, "]");
