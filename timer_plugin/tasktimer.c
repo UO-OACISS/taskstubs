@@ -14,16 +14,19 @@ tasktimer_destroy_t* tasktimer_destroy_func = NULL;
 tasktimer_add_parents_t* tasktimer_add_parents_func = NULL;
 tasktimer_add_children_t* tasktimer_add_children_func = NULL;
 
+/* After we're confident things are working, remove this. */
 #define ECHO printf("in %s\n", __func__);
 
+/* Look for a tool library, and assign the functions that it has implemented. */
 void tasktimer_initialize(void) {
     ECHO
     tasktimer_initialize_func = (tasktimer_initialize_t*)(GET_SYMBOL(tasktimer_initialize_impl));
     if (tasktimer_initialize_func == NULL) {
         return;
     }
+    /* Call the tool initializer function */
     tasktimer_initialize_func();
-    /* Assign the function pointers */
+    /* Assign the other function pointers */
     tasktimer_finalize_func = (tasktimer_finalize_t*)(GET_SYMBOL(tasktimer_finalize_impl));
     tasktimer_create_func = (tasktimer_create_t*)(GET_SYMBOL(tasktimer_create_impl));
     tasktimer_schedule_func = (tasktimer_schedule_t*)(GET_SYMBOL(tasktimer_schedule_impl));
@@ -36,6 +39,7 @@ void tasktimer_initialize(void) {
     tasktimer_add_children_func = (tasktimer_add_children_t*)(GET_SYMBOL(tasktimer_add_children_impl));
 }
 
+/* Finalize the tool */
 void tasktimer_finalize(void) {
     ECHO
     if (tasktimer_finalize_func != NULL) {
@@ -44,8 +48,10 @@ void tasktimer_finalize(void) {
     return;
 }
 
-tasktimer_timer_t tasktimer_create(const tasktimer_function_pointer_t address, const char* name,
-    const tasktimer_guid_t guid, const tasktimer_guid_t* parents, const uint64_t parent_count) {
+/* Notify the tool that a task has been created. */
+tasktimer_timer_t tasktimer_create(const tasktimer_function_pointer_t address,
+    const char* name, const tasktimer_guid_t guid,
+    const tasktimer_guid_t* parents, const uint64_t parent_count) {
     ECHO
     tasktimer_timer_t timer = NULL;
     if (tasktimer_create_func != NULL) {
@@ -54,22 +60,26 @@ tasktimer_timer_t tasktimer_create(const tasktimer_function_pointer_t address, c
     return timer;
 }
 
-void tasktimer_schedule(tasktimer_timer_t timer) {
+/* Notify the tool that a task has been scheduled. */
+void tasktimer_schedule(tasktimer_timer_t timer,
+    tasktimer_argument_value_p arguments, uint64_t argument_count) {
     ECHO
     if (tasktimer_schedule_func != NULL) {
-        tasktimer_schedule_func(timer);
+        tasktimer_schedule_func(timer, arguments, argument_count);
     }
     return;
 }
 
-void tasktimer_start(tasktimer_timer_t timer) {
+/* Notify the tool that a task has been started. */
+void tasktimer_start(tasktimer_timer_t timer, tasktimer_execution_space_p resource) {
     ECHO
     if (tasktimer_start_func != NULL) {
-        tasktimer_start_func(timer);
+        tasktimer_start_func(timer, resource);
     }
     return;
 }
 
+/* Notify the tool that a task has been yielded. */
 void tasktimer_yield(tasktimer_timer_t timer) {
     ECHO
     if (tasktimer_yield_func != NULL) {
@@ -78,14 +88,16 @@ void tasktimer_yield(tasktimer_timer_t timer) {
     return;
 }
 
-void tasktimer_resume(tasktimer_timer_t timer) {
+/* Notify the tool that a task has been resumed. */
+void tasktimer_resume(tasktimer_timer_t timer, tasktimer_execution_space_p resource) {
     ECHO
     if (tasktimer_resume_func != NULL) {
-        tasktimer_resume_func(timer);
+        tasktimer_resume_func(timer, resource);
     }
     return;
 }
 
+/* Notify the tool that a task has been stopped. */
 void tasktimer_stop(tasktimer_timer_t timer) {
     ECHO
     if (tasktimer_stop_func != NULL) {
@@ -94,6 +106,7 @@ void tasktimer_stop(tasktimer_timer_t timer) {
     return;
 }
 
+/* Notify the tool that a task has been destoyed. */
 void tasktimer_destroy(tasktimer_timer_t timer) {
     ECHO
     if (tasktimer_destroy_func != NULL) {
@@ -102,6 +115,7 @@ void tasktimer_destroy(tasktimer_timer_t timer) {
     return;
 }
 
+/* Notify the tool that a task has had more parents assigned to it. */
 void tasktimer_add_parents(tasktimer_timer_t timer, const tasktimer_guid_t* parents,
     const uint64_t parent_count) {
     ECHO
@@ -111,6 +125,7 @@ void tasktimer_add_parents(tasktimer_timer_t timer, const tasktimer_guid_t* pare
     return;
 }
 
+/* Notify the tool that a task has had more children assigned to it. */
 void tasktimer_add_children(tasktimer_timer_t timer, const tasktimer_guid_t* children,
     const uint64_t child_count) {
     ECHO

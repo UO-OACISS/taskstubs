@@ -133,12 +133,13 @@ void tasktimer_destroy_impl(tasktimer_timer_t timer) {
     free(timer);
 }
 
-void tasktimer_schedule_impl(tasktimer_timer_t in_timer) {
+void tasktimer_schedule_impl(tasktimer_timer_t in_timer,
+    tasktimer_argument_value_t* arguments, uint64_t argument_count) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     schedule(timer);
 }
 
-void tasktimer_start_impl(tasktimer_timer_t in_timer) {
+void tasktimer_start_impl(tasktimer_timer_t in_timer, tasktimer_execution_space_p resource) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     start(timer);
 }
@@ -148,7 +149,7 @@ void tasktimer_yield_impl(tasktimer_timer_t in_timer) {
     yield(timer);
 }
 
-void tasktimer_resume_impl(tasktimer_timer_t in_timer) {
+void tasktimer_resume_impl(tasktimer_timer_t in_timer, tasktimer_execution_space_p resource) {
     my_timer_t* timer = (my_timer_t*)(in_timer);
     resume(timer);
 }

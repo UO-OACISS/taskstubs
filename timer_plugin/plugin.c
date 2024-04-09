@@ -3,9 +3,8 @@
 #include <dlfcn.h>
 #include "plugin.h"
 
-#ifndef TASKTIMER_PLUGIN_ENVIRONMENT_VARIABLE_NAME
-#define TASKTIMER_PLUGIN_ENVIRONMENT_VARIABLE_NAME "TASKTIMER_EXTERNAL_TOOL_LIBRARY"
-#endif
+/* Using the libdl.so library, dynamically load the tool library
+   specified by the TASKTIMER_PLUGIN_ENVIRONMENT_VARIABLE_NAME. */
 
 void* get_library(void) {
     /* If, for some reason, we haven't preloaded the libXXX.so
@@ -31,6 +30,8 @@ void* get_library(void) {
     }
     return handle;
 }
+
+/* Using the libdl.so library, dynamically load the symbol from the tool library */
 
 void* get_symbol(const char * symbol) {
     static void* library_handle = NULL;
