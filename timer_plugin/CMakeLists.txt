@@ -1,3 +1,11 @@
+#
+# Copyright (c) 2014-2021 Kevin Huck
+# Copyright (c) 2014-2021 University of Oregon
+#
+# Distributed under the BSD 2-Clause Software License. (See accompanying
+# file LICENSE)
+#
+
 # Include this directory when searching for headers
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

@@ -1,3 +1,11 @@
+#
+# Copyright (c) 2014-2021 Kevin Huck
+# Copyright (c) 2014-2021 University of Oregon
+#
+# Distributed under the BSD 2-Clause Software License. (See accompanying
+# file LICENSE)
+#
+
 cmake_minimum_required (VERSION 3.22)
 project(plugin C CXX)
 set(CMAKE_CXX_STANDARD 17)

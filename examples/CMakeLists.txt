@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2014-2021 Kevin Huck
+# Copyright (c) 2014-2021 University of Oregon
+#
+# Distributed under the BSD 2-Clause Software License. (See accompanying
+# file LICENSE)
+#
 
 # Simple example in C, instrumentation disabled entirely!
 add_executable(main_c_without main.c)
