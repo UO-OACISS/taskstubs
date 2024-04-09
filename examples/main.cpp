@@ -7,31 +7,36 @@
  */
 
 #include <stddef.h>
+#include <atomic>
 #include "tasktimer.h"
 
-void A(void);
-void B(void);
-void C(void);
+std::atomic<uint64_t> guid{0};
 
-void A(void) {
-    uint64_t parents[] = {0};
+void A(uint64_t);
+void B(uint64_t, uint64_t);
+void C(uint64_t, uint64_t);
+
+void A(uint64_t parent) {
+    uint64_t parents[] = {parent};
+    uint64_t myguid = guid++;
     // both address and name
-    TASKTIMER_CREATE(&A, "A", 1, parents, 1, tt_A);
+    TASKTIMER_CREATE(&A, "A", myguid, parents, 1, tt_A);
     TASKTIMER_SCHEDULE(tt_A, NULL, 0);
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
     resource.instance_id = 0;
     TASKTIMER_START(tt_A, &resource);
-    B();
-    C();
+    B(parent, myguid);
+    C(parent, myguid);
     TASKTIMER_STOP(tt_A);
 }
 
-void B(void) {
-    uint64_t parents[] = {0,1};
+void B(uint64_t parent1, uint64_t parent2) {
+    uint64_t parents[] = {parent1, parent2};
+    uint64_t myguid = guid++;
     // both address and name
-    TASKTIMER_CREATE(&B, "B", 2, parents, 2, tt_B);
+    TASKTIMER_CREATE(&B, "B", myguid, parents, 2, tt_B);
     TASKTIMER_SCHEDULE(tt_B, NULL, 0);
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
@@ -41,10 +46,11 @@ void B(void) {
     TASKTIMER_STOP(tt_B);
 }
 
-void C(void) {
-    uint64_t parents[] = {0,1};
+void C(uint64_t parent1, uint64_t parent2) {
+    uint64_t parents[] = {parent1, parent2};
+    uint64_t myguid = guid++;
     // no name, just address
-    TASKTIMER_CREATE(&C, NULL, 3, parents, 2, tt_C);
+    TASKTIMER_CREATE(&C, NULL, myguid, parents, 2, tt_C);
     TASKTIMER_SCHEDULE(tt_C, NULL, 0);
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
@@ -55,9 +61,10 @@ void C(void) {
 }
 
 int main(int argc, char * argv[]) {
+    uint64_t myguid = guid++;
     // no address, just name
     TASKTIMER_INITIALIZE();
-    TASKTIMER_CREATE(NULL, "main", 0, NULL, 0, tt);
+    TASKTIMER_CREATE(NULL, "main", myguid, NULL, 0, tt);
     TASKTIMER_SCHEDULE(tt, NULL, 0);
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
@@ -65,7 +72,7 @@ int main(int argc, char * argv[]) {
     resource.instance_id = 0;
     TASKTIMER_START(tt, &resource);
     TASKTIMER_YIELD(tt);
-    A();
+    A(myguid);
     TASKTIMER_RESUME(tt, &resource);
     TASKTIMER_STOP(tt);
     TASKTIMER_FINALIZE();
