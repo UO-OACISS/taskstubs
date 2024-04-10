@@ -8,8 +8,14 @@
 
 #include <stddef.h>
 #include "tasktimer.h"
-#define _GNU_SOURCE
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/syscall.h>
+
+uint64_t gettid(void) {
+    pid_t x = syscall(__NR_gettid);
+    return (uint64_t)(x);
+}
 
 uint64_t new_guid(void) {
     static uint64_t count = 0;
