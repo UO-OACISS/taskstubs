@@ -11,6 +11,8 @@
 #include "tasktimer.h"
 #include <unistd.h>
 
+/* This simple example is truly overkill, but it tests all aspects of the API. */
+
 std::atomic<uint64_t> guid{0};
 
 void A(uint64_t);

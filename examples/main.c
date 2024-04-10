@@ -12,6 +12,8 @@
 #include <sys/types.h>
 #include <sys/syscall.h>
 
+/* This simple example is truly overkill, but it tests all aspects of the API. */
+
 uint64_t gettid(void) {
     pid_t x = syscall(__NR_gettid);
     return (uint64_t)(x);
