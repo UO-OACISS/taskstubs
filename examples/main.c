@@ -8,6 +8,8 @@
 
 #include <stddef.h>
 #include "tasktimer.h"
+#define _GNU_SOURCE
+#include <unistd.h>
 
 uint64_t new_guid(void) {
     static uint64_t count = 0;
@@ -30,7 +32,7 @@ void A(uint64_t parent) {
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
-    resource.instance_id = 0;
+    resource.instance_id = gettid();
     TASKTIMER_START(tt_A, &resource);
     B(parent, myguid);
     C(parent, myguid);
@@ -51,7 +53,7 @@ void B(uint64_t parent1, uint64_t parent2) {
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
-    resource.instance_id = 0;
+    resource.instance_id = gettid();
     TASKTIMER_START(tt_B, &resource);
     TASKTIMER_STOP(tt_B);
 }
@@ -70,26 +72,34 @@ void C(uint64_t parent1, uint64_t parent2) {
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
-    resource.instance_id = 0;
+    resource.instance_id = gettid();
     TASKTIMER_START(tt_C, &resource);
     TASKTIMER_STOP(tt_C);
 }
 
 int main(int argc, char * argv[]) {
+    // initialize the timer plugin
+    TASKTIMER_INITIALIZE();
     uint64_t myguid = new_guid();
     // no address, just name
-    TASKTIMER_INITIALIZE();
     TASKTIMER_CREATE(NULL, "main", myguid, NULL, 0, tt);
+    // schedule the task
     TASKTIMER_SCHEDULE(tt, NULL, 0);
+    // execute the task on CPU 0, thread_id
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
-    resource.instance_id = 0;
+    resource.instance_id = gettid();
     TASKTIMER_START(tt, &resource);
+    // yield the task
     TASKTIMER_YIELD(tt);
+    // run a "child" task
     A(myguid);
+    // resume the task
     TASKTIMER_RESUME(tt, &resource);
+    // stop the task
     TASKTIMER_STOP(tt);
+    // finalize the timer plugin
     TASKTIMER_FINALIZE();
     return 0;
 }
