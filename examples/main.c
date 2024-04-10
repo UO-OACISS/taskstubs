@@ -23,7 +23,10 @@ void A(uint64_t parent) {
     uint64_t myguid = new_guid();
     // both address and name
     TASKTIMER_CREATE(&A, "A", myguid, parents, 1, tt_A);
-    TASKTIMER_SCHEDULE(tt_A, NULL, 0);
+    tasktimer_argument_value_t args[1];
+    args[0].type = TASKTIMER_LONG_INTEGER_TYPE;
+    args[0].l_value = parent;
+    TASKTIMER_SCHEDULE(tt_A, args, 1);
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
@@ -39,7 +42,12 @@ void B(uint64_t parent1, uint64_t parent2) {
     uint64_t myguid = new_guid();
     // both address and name
     TASKTIMER_CREATE(&B, "B", myguid, parents, 2, tt_B);
-    TASKTIMER_SCHEDULE(tt_B, NULL, 0);
+    tasktimer_argument_value_t args[2];
+    args[0].type = TASKTIMER_LONG_INTEGER_TYPE;
+    args[0].l_value = parent1;
+    args[1].type = TASKTIMER_LONG_INTEGER_TYPE;
+    args[1].l_value = parent2;
+    TASKTIMER_SCHEDULE(tt_B, args, 2);
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
@@ -53,7 +61,12 @@ void C(uint64_t parent1, uint64_t parent2) {
     uint64_t myguid = new_guid();
     // no name, just address
     TASKTIMER_CREATE(&C, NULL, myguid, parents, 2, tt_C);
-    TASKTIMER_SCHEDULE(tt_C, NULL, 0);
+    tasktimer_argument_value_t args[2];
+    args[0].type = TASKTIMER_LONG_INTEGER_TYPE;
+    args[0].l_value = parent1;
+    args[1].type = TASKTIMER_LONG_INTEGER_TYPE;
+    args[1].l_value = parent2;
+    TASKTIMER_SCHEDULE(tt_C, args, 2);
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
