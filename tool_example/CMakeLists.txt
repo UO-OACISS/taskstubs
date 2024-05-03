@@ -12,6 +12,9 @@ add_library(MyToolC SHARED my_tool.c)
 # Our tool has a dependency on libdl.so
 target_link_libraries(MyToolC dl)
 
+# Our tool needs to find the plugin_timer includes
+target_include_directories(MyToolC PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../timer_plugin/)
+
 # Make sure we export symbols that the plugin loader will look for
 target_compile_definitions(MyToolC PRIVATE COMPILE_PLUGIN)
 
