@@ -8,6 +8,7 @@
 
 # Simple example in C, instrumentation disabled entirely!
 add_executable(main_c_without main.c)
+target_include_directories(main_c_without PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../timer_plugin)
 # Simple example in C, instrumentation enabled
 add_executable(main_c_with main.c)
 target_compile_definitions(main_c_with PRIVATE TASKTIMER_USE_TIMERS)
@@ -16,6 +17,7 @@ target_link_libraries(main_c_with timer_plugin)
 
 # Simple example in C++, instrumentation disabled entirely!
 add_executable(main_cpp_without main.cpp)
+target_include_directories(main_cpp_without PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../timer_plugin)
 # Simple example in C++, instrumentation enabled
 add_executable(main_cpp_with main.cpp)
 target_compile_definitions(main_cpp_with PRIVATE TASKTIMER_USE_TIMERS)
