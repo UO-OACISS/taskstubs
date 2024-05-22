@@ -234,6 +234,9 @@ typedef void tasktimer_data_transfer_stop_t(tasktimer_guid_t);
 /* Function declarations:
    the plugin loader will look for these, and
    the tool should implement them. */
+#ifdef __cplusplus
+extern "C" {
+#endif
 PLUGIN_INTERFACE tasktimer_initialize_t tasktimer_initialize_impl;
 PLUGIN_INTERFACE tasktimer_finalize_t tasktimer_finalize_impl;
 PLUGIN_INTERFACE tasktimer_create_t tasktimer_create_impl;
@@ -245,4 +248,6 @@ PLUGIN_INTERFACE tasktimer_stop_t tasktimer_stop_impl;
 PLUGIN_INTERFACE tasktimer_destroy_t tasktimer_destroy_impl;
 PLUGIN_INTERFACE tasktimer_add_parents_t tasktimer_add_parents_impl;
 PLUGIN_INTERFACE tasktimer_add_children_t tasktimer_add_children_impl;
-
+#ifdef __cplusplus
+}
+#endif
