@@ -31,6 +31,8 @@ tasktimer_add_parents_t tasktimer_add_parents;
 tasktimer_add_children_t tasktimer_add_children;
 tasktimer_data_transfer_start_t tasktimer_data_transfer_start;
 tasktimer_data_transfer_stop_t tasktimer_data_transfer_stop;
+tasktimer_command_start_t tasktimer_command_start;
+tasktimer_command_stop_t tasktimer_command_stop;
 
 #ifdef __cplusplus
 }
@@ -70,7 +72,10 @@ tasktimer_data_transfer_stop_t tasktimer_data_transfer_stop;
         tasktimer_data_transfer_start(_guid, _src_resource, _src_name, _src_ptr, _dest_resource, _dest_name, _dest_ptr)
 #define TASKTIMER_DATA_TRANSFER_STOP(_guid) \
         tasktimer_data_transfer_stop(_guid)
-
+#define TASKTIMER_COMMAND_START(_type_name) \
+        tasktimer_command_start(_type_name)
+#define TASKTIMER_COMMAND_STOP() \
+        tasktimer_command_stop()
 #else
 
 #define TASKTIMER_INITIALIZE()
@@ -86,6 +91,8 @@ tasktimer_data_transfer_stop_t tasktimer_data_transfer_stop;
 #define TASKTIMER_ADD_CHILDREN(_timer, _children, _child_count)
 #define TASKTIMER_DATA_TRANSFER_START(_guid, _src_resource, _src_name, _src_ptr, _dest_resource, _dest_name, _dest_ptr)
 #define TASKTIMER_DATA_TRANSFER_STOP(_guid)
+#define TASKTIMER_COMMAND_START(_type_name)
+#define TASKTIMER_COMMAND_STOP()
 
 #endif
 

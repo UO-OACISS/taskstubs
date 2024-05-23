@@ -21,6 +21,10 @@ tasktimer_stop_t* tasktimer_stop_func = NULL;
 tasktimer_destroy_t* tasktimer_destroy_func = NULL;
 tasktimer_add_parents_t* tasktimer_add_parents_func = NULL;
 tasktimer_add_children_t* tasktimer_add_children_func = NULL;
+tasktimer_data_transfer_start_t* tasktimer_data_transfer_start_func = NULL;
+tasktimer_data_transfer_stop_t* tasktimer_data_transfer_stop_func = NULL;
+tasktimer_command_start_t* tasktimer_command_start_func = NULL;
+tasktimer_command_stop_t* tasktimer_command_stop_func = NULL;
 
 /* After we're confident things are working, remove this. */
 #define ECHO printf("in %s\n", __func__);
@@ -45,6 +49,10 @@ void tasktimer_initialize(void) {
     tasktimer_destroy_func = (tasktimer_destroy_t*)(GET_SYMBOL(tasktimer_destroy_impl));
     tasktimer_add_parents_func = (tasktimer_add_parents_t*)(GET_SYMBOL(tasktimer_add_parents_impl));
     tasktimer_add_children_func = (tasktimer_add_children_t*)(GET_SYMBOL(tasktimer_add_children_impl));
+    tasktimer_data_transfer_start_func = (tasktimer_data_transfer_start_t*)(GET_SYMBOL(tasktimer_data_transfer_start_impl));
+    tasktimer_data_transfer_stop_func = (tasktimer_data_transfer_stop_t*)(GET_SYMBOL(tasktimer_data_transfer_stop_impl));
+    tasktimer_command_start_func = (tasktimer_command_start_t*)(GET_SYMBOL(tasktimer_command_start_impl));
+    tasktimer_command_stop_func = (tasktimer_command_stop_t*)(GET_SYMBOL(tasktimer_command_stop_impl));
 }
 
 /* Finalize the tool */
@@ -139,6 +147,40 @@ void tasktimer_add_children(tasktimer_timer_t timer, const tasktimer_guid_t* chi
     ECHO
     if (tasktimer_add_children_func != NULL) {
         tasktimer_add_children_func(timer, children, child_count);
+    }
+    return;
+}
+
+void tasktimer_data_transfer_start(tasktimer_guid_t guid,
+    tasktimer_execution_space_p source_resource_type, const char* source_name, const void* source_ptr,
+    tasktimer_execution_space_p dest_resource_type, const char* dest_name, const void* dest_ptr) {
+    ECHO
+    if (tasktimer_data_transfer_start_func != NULL) {
+        tasktimer_data_transfer_start_func(guid, source_resource_type, source_name, source_ptr, dest_resource_type, dest_name, dest_ptr);
+    }
+    return;
+}
+
+void tasktimer_data_transfer_stop(tasktimer_guid_t guid) {
+    ECHO
+    if (tasktimer_data_transfer_stop_func != NULL) {
+        tasktimer_data_transfer_stop_func(guid);
+    }
+    return;
+}
+
+void tasktimer_command_start(const char* type_name) {
+    ECHO
+    if (tasktimer_command_start_func != NULL) {
+        tasktimer_command_start_func(type_name);
+    }
+    return;
+}
+
+void tasktimer_command_stop(void) {
+    ECHO
+    if (tasktimer_command_stop_func != NULL) {
+        tasktimer_command_stop_func();
     }
     return;
 }

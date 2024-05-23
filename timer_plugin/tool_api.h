@@ -215,15 +215,18 @@ typedef void tasktimer_data_transfer_start_t(tasktimer_guid_t,
     tasktimer_execution_space_p, const char*, const void*);
 
 /**
- \brief Transfer data start
+ \brief Transfer data stop
 
- The data transfer start function will notify that a data transfer has ended
+ The data transfer stop function will notify that a data transfer has ended
  between two execution spaces, either host-host, host-device, device-host, or
  device-device.
- \param guid          identifier of the data transfer
+ \param guid          identifier of the data transfer (is this necessary?)
  \sa @ref tasktimer_data_transfer_start_t
 */
 typedef void tasktimer_data_transfer_stop_t(tasktimer_guid_t);
+
+typedef void tasktimer_command_start_t(const char*);
+typedef void tasktimer_command_stop_t();
 
 #ifdef COMPILE_PLUGIN
 #define PLUGIN_INTERFACE __attribute__((visibility("default")))
@@ -248,6 +251,10 @@ PLUGIN_INTERFACE tasktimer_stop_t tasktimer_stop_impl;
 PLUGIN_INTERFACE tasktimer_destroy_t tasktimer_destroy_impl;
 PLUGIN_INTERFACE tasktimer_add_parents_t tasktimer_add_parents_impl;
 PLUGIN_INTERFACE tasktimer_add_children_t tasktimer_add_children_impl;
+PLUGIN_INTERFACE tasktimer_data_transfer_start_t tasktimer_data_transfer_start;
+PLUGIN_INTERFACE tasktimer_data_transfer_stop_t tasktimer_data_transfer_stop;
+PLUGIN_INTERFACE tasktimer_command_start_t tasktimer_command_start;
+PLUGIN_INTERFACE tasktimer_command_stop_t tasktimer_command_stop;
 #ifdef __cplusplus
 }
 #endif

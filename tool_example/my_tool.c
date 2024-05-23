@@ -122,6 +122,24 @@ static void add_children(my_timer_t* timer, const uint64_t* children, const uint
     printf("Timer %s adding children %s\n", label(timer), printSet(timer->mChildren, count));
 }
 
+static void data_transfer_start(tasktimer_guid_t guid,
+    tasktimer_execution_space_p source_type, const char* source_name, const void* source_ptr,
+    tasktimer_execution_space_p dest_type, const char* dest_name, const void* dest_ptr) {
+    printf("Data transfer %lu start\n", guid);
+}
+
+static void data_transfer_stop(tasktimer_guid_t guid) {
+    printf("Data transfer %lu stop\n", guid);
+}
+
+static void command_start(const char* type_name) {
+    printf("Command %s start\n", type_name);
+}
+
+static void command_stop() {
+    printf("Command stop\n");
+}
+
 void tasktimer_initialize_impl(void) {
     init();
 }
@@ -178,4 +196,23 @@ void tasktimer_add_children_impl(tasktimer_timer_t in_timer,
     my_timer_t* timer = (my_timer_t*)(in_timer);
     add_children(timer, children, count);
 }
+
+void tasktimer_data_transfer_start_impl(tasktimer_guid_t guid,
+    tasktimer_execution_space_p source_type, const char* source_name, const void* source_ptr,
+    tasktimer_execution_space_p dest_type, const char* dest_name, const void* dest_ptr) {
+    data_transfer_start(guid, source_type, source_name, source_ptr, dest_type, dest_name, dest_ptr);
+}
+
+void tasktimer_data_transfer_stop_impl(tasktimer_guid_t guid) {
+    data_transfer_stop(guid);
+}
+
+void tasktimer_command_start_impl(const char* type_name) {
+    command_start(type_name);
+}
+
+void tasktimer_command_stop_impl(void) {
+    command_stop();
+}
+
 
