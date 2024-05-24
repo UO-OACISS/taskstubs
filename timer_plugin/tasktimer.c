@@ -27,7 +27,7 @@ tasktimer_command_start_t* tasktimer_command_start_func = NULL;
 tasktimer_command_stop_t* tasktimer_command_stop_func = NULL;
 
 /* After we're confident things are working, remove this. */
-#define ECHO printf("in %s\n", __func__);
+#define ECHO // printf("in %s\n", __func__);
 
 /* Look for a tool library, and assign the functions that it has implemented. */
 void tasktimer_initialize(void) {
