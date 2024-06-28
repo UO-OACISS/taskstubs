@@ -10,8 +10,6 @@
 #include <stdint.h>
 #include <tool_api.h>
 
-#if defined(TASKTIMER_USE_TIMERS)
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -67,7 +65,7 @@ tasktimer_command_stop_t tasktimer_command_stop;
 #define TASKTIMER_ADD_PARENTS(_timer, _parents, _parent_count) \
         tasktimer_add_parents(_timer, _parents, _parent_count)
 #define TASKTIMER_ADD_CHILDREN(_timer, _children, _child_count) \
-        tasktimer_add_parents(_timer, _children, _child_count)
+        tasktimer_add_children(_timer, _children, _child_count)
 #define TASKTIMER_DATA_TRANSFER_START(_guid, _src_resource, _src_name, _src_ptr, _dest_resource, _dest_name, _dest_ptr) \
         tasktimer_data_transfer_start(_guid, _src_resource, _src_name, _src_ptr, _dest_resource, _dest_name, _dest_ptr)
 #define TASKTIMER_DATA_TRANSFER_STOP(_guid) \
@@ -76,23 +74,4 @@ tasktimer_command_stop_t tasktimer_command_stop;
         tasktimer_command_start(_type_name)
 #define TASKTIMER_COMMAND_STOP() \
         tasktimer_command_stop()
-#else
-
-#define TASKTIMER_INITIALIZE()
-#define TASKTIMER_FINALIZE()
-#define TASKTIMER_CREATE(_address, _name, _guid, _parents, _parent_count, _timer)
-#define TASKTIMER_SCHEDULE(_timer, _args, _count)
-#define TASKTIMER_START(_timer, _resource)
-#define TASKTIMER_YIELD(_timer)
-#define TASKTIMER_RESUME(_timer, _resource)
-#define TASKTIMER_STOP(_timer)
-#define TASKTIMER_DESTROY(_timer)
-#define TASKTIMER_ADD_PARENTS(_timer, _parents, _parent_count)
-#define TASKTIMER_ADD_CHILDREN(_timer, _children, _child_count)
-#define TASKTIMER_DATA_TRANSFER_START(_guid, _src_resource, _src_name, _src_ptr, _dest_resource, _dest_name, _dest_ptr)
-#define TASKTIMER_DATA_TRANSFER_STOP(_guid)
-#define TASKTIMER_COMMAND_START(_type_name)
-#define TASKTIMER_COMMAND_STOP()
-
-#endif
 
