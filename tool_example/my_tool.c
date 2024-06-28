@@ -14,15 +14,18 @@
 #include <inttypes.h>
 #include "tool_api.h"
 
+#define MAX_PARENTS  32
+#define MAX_CHILDREN 128
+
 typedef struct my_timer {
         char* mName;
         uint64_t mID;
         int hasName;
         const void* mAddress;
         /* This is a dumb example with fixed lengths for parents, children */
-        uint64_t mParents[32];
+        uint64_t mParents[MAX_PARENTS];
         uint64_t mParentCount;
-        uint64_t mChildren[32];
+        uint64_t mChildren[MAX_CHILDREN];
         uint64_t mChildCount;
 } my_timer_t;
 
@@ -58,9 +61,13 @@ static char* printSet(const uint64_t* inSet, const uint64_t count) {
 }
 
 /* not that sophisticated, just append the new set to the old set */
-static uint64_t merge_set(uint64_t* old_set, uint64_t old_count, const uint64_t* new_set, const uint64_t new_count) {
+static uint64_t merge_set(uint64_t* old_set, uint64_t old_count, const uint64_t* new_set, const uint64_t new_count, const uint64_t max_count) {
     if (new_count > 0) {
         for(uint64_t i = 0 ; i < new_count ; i++) {
+            if(old_count + i >= max_count) {
+                fprintf(stderr, "%s:%d Exceeded number of children or parents in merge_set\n", __FILE__, __LINE__);
+                return old_count+i;
+            }
             old_set[old_count + i] = new_set[i];
         }
     }
@@ -78,7 +85,7 @@ static my_timer_t* create_mytimer(const void* address, const char* name,
         timer->hasName = 0;
     }
     timer->mID = id;
-    timer->mParentCount = merge_set(timer->mParents, 0, parents, count);
+    timer->mParentCount = merge_set(timer->mParents, 0, parents, count, MAX_PARENTS);
     printf("Created timer %s with ID %" PRId64 " and parents %s\n",
         label(timer), timer->mID, printSet(timer->mParents, timer->mParentCount));
     return timer;
@@ -113,12 +120,12 @@ static void stop(my_timer_t* timer) {
 }
 
 static void add_parents(my_timer_t* timer, const uint64_t* parents, const uint64_t count) {
-    timer->mParentCount = merge_set(timer->mParents, timer->mParentCount, parents, count);
+    timer->mParentCount = merge_set(timer->mParents, timer->mParentCount, parents, count, MAX_PARENTS);
     printf("Timer %s adding parents %s\n", label(timer), printSet(timer->mParents, count));
 }
 
 static void add_children(my_timer_t* timer, const uint64_t* children, const uint64_t count) {
-    timer->mChildCount = merge_set(timer->mChildren, timer->mChildCount, children, count);
+    timer->mChildCount = merge_set(timer->mChildren, timer->mChildCount, children, count, MAX_CHILDREN);
     printf("Timer %s adding children %s\n", label(timer), printSet(timer->mChildren, count));
 }
 
