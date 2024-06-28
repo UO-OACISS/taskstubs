@@ -22,13 +22,13 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # and examples
   enable_testing()
 
-  # This directory has a demonstration tool that a measurement
-  # library would implement
-  add_subdirectory(tool_example)
-
   # This directory has simple examples
   add_subdirectory(examples)
 endif (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+
+# This directory has a demonstration tool that a measurement
+# library would implement
+add_subdirectory(tool_example)
 
 ## All the installation things go here ##
 
