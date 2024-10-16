@@ -32,6 +32,7 @@ add_subdirectory(tool_example)
 
 ## All the installation things go here ##
 
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 # for CMAKE_INSTALL_INCLUDEDIR definition
 include(GNUInstallDirs)
 
@@ -82,12 +83,15 @@ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
     INSTALL_DESTINATION cmake
 )
-# install config files
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-    DESTINATION cmake
-)
+
+    # install config files
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+        DESTINATION cmake
+    )
+endif (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+
 # generate the export targets for the build tree
 # (can't say what this one is for, but so far it has been only causing me problems,
 # so I stopped adding it to projects)

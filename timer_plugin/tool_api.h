@@ -22,6 +22,7 @@ typedef uint64_t tasktimer_guid_t;
 /* Enumeration for scheduler arguments */
 typedef enum {
     TASKTIMER_LONG_INTEGER_TYPE = 0,
+    TASKTIMER_UNSIGNED_LONG_INTEGER_TYPE,
     TASKTIMER_DOUBLE_TYPE,
     TASKTIMER_STRING_TYPE,
     TASKTIMER_POINTER_TYPE,
@@ -33,12 +34,14 @@ typedef enum {
 typedef struct tasktimer_argument_value {
     tasktimer_argument_type_t type;
     union {
-        uint64_t l_value;
+        int64_t l_value;
+        uint64_t u_value;
         double d_value;
         char* c_value;
         void* p_value;
         void* a_value;
     };
+    const char * name;
 } tasktimer_argument_value_t;
 
 /* Enumeration for data transfers and task execution */
