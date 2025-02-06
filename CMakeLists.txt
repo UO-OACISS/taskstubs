@@ -90,6 +90,18 @@ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
         "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
         DESTINATION cmake
     )
+
+    # pkg-config files
+    configure_file(
+	${CMAKE_CURRENT_SOURCE_DIR}/share/pkgconfig/${PROJECT_NAME}.pc.in
+	${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc
+	@ONLY
+     )
+     
+    install(
+	FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc
+	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig
+    )
 endif (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 # generate the export targets for the build tree
