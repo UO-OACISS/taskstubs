@@ -142,7 +142,7 @@ message(STATUS "----------------------------------------------------------------
 message(STATUS "APEX Dependency Report:")
 message(STATUS "----------------------------------------------------------------------")
 dump_cmake_variables("^CUDAToolkit")
-dump_cmake_variables("^HIP")
+dump_cmake_variables("^ROC")
 dump_defines()
 MESSAGE(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
 MESSAGE(STATUS "Libraries: " ${LIBS})

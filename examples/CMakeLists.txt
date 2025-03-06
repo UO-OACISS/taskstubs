@@ -30,6 +30,12 @@ add_test(NAME testWith_nvtx_tool_c COMMAND main_c_with)
 set_property(TEST testWith_nvtx_tool_c PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/tool_examples/libnvtx_tool${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
 
+if(ROCTX_FOUND)
+# Test with plugin support and nvtx tool loaded
+add_test(NAME testWith_roctx_tool_c COMMAND main_c_with)
+set_property(TEST testWith_roctx_tool_c PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/tool_examples/libroctx_tool${CMAKE_SHARED_LIBRARY_SUFFIX}")
+endif()
+
 # Test with plugin support, but no tool
 add_test(NAME testWithout_tool_cpp COMMAND main_cpp_with)
 # Test with plugin support and tool loaded
@@ -40,5 +46,11 @@ if(CUDAToolkit_FOUND)
 # Test with plugin support and nvtx tool loaded
 add_test(NAME testWith_nvtx_tool_cpp COMMAND main_cpp_with)
 set_property(TEST testWith_nvtx_tool_cpp PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/tool_examples/libnvtx_tool${CMAKE_SHARED_LIBRARY_SUFFIX}")
+endif()
+
+if(ROCTX_FOUND)
+# Test with plugin support and roctx tool loaded
+add_test(NAME testWith_roctx_tool_cpp COMMAND main_cpp_with)
+set_property(TEST testWith_roctx_tool_cpp PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/tool_examples/libroctx_tool${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
 

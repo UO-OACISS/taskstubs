@@ -22,7 +22,6 @@ target_compile_definitions(MyToolC PRIVATE COMPILE_PLUGIN)
 target_compile_definitions(MyToolC PRIVATE _GNU_SOURCE)
 
 # Make a CUDA NVTX example
-
 if(DEFINED CUDATOOLKIT_HOME OR DEFINED CUDATOOLKIT_ROOT OR DEFINED ENV{CUDATOOLKIT_HOME})
     find_package(CUDAToolkit REQUIRED)
     set(CUDAToolkit_FOUND TRUE CACHE BOOL "CUDA Toolkit was found")
@@ -33,3 +32,15 @@ if(DEFINED CUDATOOLKIT_HOME OR DEFINED CUDATOOLKIT_ROOT OR DEFINED ENV{CUDATOOLK
     target_compile_definitions(nvtx_tool PRIVATE COMPILE_PLUGIN)
     target_compile_definitions(nvtx_tool PRIVATE _GNU_SOURCE)
 endif()
+
+# Make a HIP ROCTX example
+if(DEFINED ROCM_PATH OR DEFINED ROCM_HOME OR DEFINED ENV{ROCM_PATH})
+    find_package(rocprofiler-sdk-roctx REQUIRED)
+    set(ROCTX_FOUND TRUE CACHE BOOL "ROCTX was found")
+    add_library(roctx_tool SHARED roctx_tool.cpp)
+    target_link_libraries(roctx_tool PRIVATE rocprofiler-sdk-roctx::rocprofiler-sdk-roctx dl)
+    target_include_directories(roctx_tool PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../timer_plugin/)
+    target_compile_definitions(roctx_tool PRIVATE COMPILE_PLUGIN)
+    target_compile_definitions(roctx_tool PRIVATE _GNU_SOURCE)
+endif()
+
