@@ -94,6 +94,7 @@ class roctxTimer {
             doMarker("Timer Schedule");
         }
         void start() {
+            //std::cout << "Start " << _name << std::endl;
             if (_rangeId == 0) {
                 _rangeId = roctxRangeStartA(_name.c_str());
             }
@@ -110,6 +111,7 @@ class roctxTimer {
             }
         }
         void stop() {
+            //std::cout << "Stop " << _name << std::endl;
             if (_rangeId > 0) {
                 roctxRangeStop(_rangeId);
                 _rangeId = 0;
