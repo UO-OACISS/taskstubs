@@ -23,17 +23,22 @@ add_test(NAME testWithout_c2 COMMAND main_c_with)
 # Test with plugin support and tool loaded
 add_test(NAME testWith_c COMMAND main_c_with)
 set_property(TEST testWith_c PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/tool_examples/libMyToolC${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
+if(CUDAToolkit_FOUND)
 # Test with plugin support and nvtx tool loaded
 add_test(NAME testWith2_c COMMAND main_c_with)
 set_property(TEST testWith2_c PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/tool_examples/libnvtx_tool${CMAKE_SHARED_LIBRARY_SUFFIX}")
+endif()
 
 # Test with plugin support, but no tool
 add_test(NAME testWithout_cpp2 COMMAND main_cpp_with)
 # Test with plugin support and tool loaded
 add_test(NAME testWith_cpp COMMAND main_cpp_with)
 set_property(TEST testWith_cpp PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/tool_examples/libMyToolC${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
+if(CUDAToolkit_FOUND)
 # Test with plugin support and nvtx tool loaded
 add_test(NAME testWith2_cpp COMMAND main_cpp_with)
 set_property(TEST testWith2_cpp PROPERTY ENVIRONMENT "TASKTIMER_EXTERNAL_TOOL_LIBRARY=${CMAKE_BINARY_DIR}/tool_examples/libnvtx_tool${CMAKE_SHARED_LIBRARY_SUFFIX}")
-
+endif()
 

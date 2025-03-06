@@ -17,6 +17,10 @@ set(CMAKE_EXE_LINKER_FLAGS -rdynamic)
 # will use to instrument itself
 add_subdirectory(timer_plugin)
 
+# This directory has a demonstration tool that a measurement
+# library would implement
+add_subdirectory(tool_examples)
+
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # If we're configuring this project standalone, we want testers
   # and examples
@@ -25,10 +29,6 @@ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # This directory has simple examples
   add_subdirectory(examples)
 endif (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-
-# This directory has a demonstration tool that a measurement
-# library would implement
-add_subdirectory(tool_examples)
 
 ## All the installation things go here ##
 
@@ -111,3 +111,45 @@ endif (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 #     FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Targets.cmake"
 #     NAMESPACE ${namespace}::
 #)
+
+function(dump_cmake_variables)
+    get_cmake_property(_variableNames VARIABLES)
+    list (SORT _variableNames)
+    foreach (_variableName ${_variableNames})
+        if (ARGV0)
+            unset(MATCHED)
+            string(REGEX MATCH ${ARGV0} MATCHED ${_variableName})
+            if (NOT MATCHED)
+                continue()
+            endif()
+        endif()
+        message(STATUS "${_variableName} = ${${_variableName}}")
+    endforeach()
+endfunction()
+
+function(dump_defines)
+    get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
+    foreach( d ${DirDefs} )
+        message( STATUS "Found Define: " ${d} )
+    endforeach()
+endfunction()
+
+message(STATUS "----------------------------------------------------------------------")
+message(STATUS "TaskStubs Variable Report:")
+message(STATUS "----------------------------------------------------------------------")
+dump_cmake_variables("^TASKSTUBS")
+message(STATUS "----------------------------------------------------------------------")
+message(STATUS "APEX Dependency Report:")
+message(STATUS "----------------------------------------------------------------------")
+dump_cmake_variables("^CUDAToolkit")
+dump_cmake_variables("^HIP")
+dump_defines()
+MESSAGE(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
+MESSAGE(STATUS "Libraries: " ${LIBS})
+MESSAGE(STATUS "Compiler cxx debug flags:" ${CMAKE_CXX_FLAGS_DEBUG})
+MESSAGE(STATUS "Compiler cxx release flags:" ${CMAKE_CXX_FLAGS_RELEASE})
+MESSAGE(STATUS "Compiler cxx min size flags:" ${CMAKE_CXX_FLAGS_MINSIZEREL})
+MESSAGE(STATUS "Compiler cxx flags:" ${CMAKE_CXX_FLAGS})
+MESSAGE(STATUS "Install Prefix:" ${CMAKE_INSTALL_PREFIX})
+message(STATUS "----------------------------------------------------------------------")
+
