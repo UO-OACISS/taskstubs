@@ -21,4 +21,15 @@ target_compile_definitions(MyToolC PRIVATE COMPILE_PLUGIN)
 # Enable GNU extensions
 target_compile_definitions(MyToolC PRIVATE _GNU_SOURCE)
 
+# Make a CUDA NVTX example
 
+if(DEFINED CUDATOOLKIT_HOME OR DEFINED CUDATOOLKIT_ROOT OR DEFINED ENV{CUDATOOLKIT_HOME})
+    find_package(CUDAToolkit REQUIRED)
+    set(CUDAToolkit_FOUND TRUE CACHE BOOL "CUDA Toolkit was found")
+    #find_package(NVTX)
+    add_library(nvtx_tool SHARED nvtx_tool.cpp)
+    target_link_libraries(nvtx_tool PRIVATE nvToolsExt dl)
+    target_include_directories(nvtx_tool PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../timer_plugin/)
+    target_compile_definitions(nvtx_tool PRIVATE COMPILE_PLUGIN)
+    target_compile_definitions(nvtx_tool PRIVATE _GNU_SOURCE)
+endif()
