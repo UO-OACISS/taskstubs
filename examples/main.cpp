@@ -11,12 +11,13 @@
 #include <array>
 #include <algorithm>
 #include <iterator>
+#include <thread>
 #include <string.h>
 #include "tasktimer.h"
 #include <unistd.h>
 #include <sys/syscall.h>
 
-uint64_t gettid(void) {
+uint64_t mygettid(void) {
     pid_t x = syscall(__NR_gettid);
     return (uint64_t)(x);
 }
@@ -45,8 +46,9 @@ void A(uint64_t parent) {
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
-    resource.instance_id = gettid();
+    resource.instance_id = mygettid();
     TASKTIMER_START(tt_A, &resource);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
     B(parent, myguid);
     C(parent, myguid);
     TASKTIMER_STOP(tt_A);
@@ -66,8 +68,9 @@ void B(uint64_t parent1, uint64_t parent2) {
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
-    resource.instance_id = gettid();
+    resource.instance_id = mygettid();
     TASKTIMER_START(tt_B, &resource);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
     TASKTIMER_STOP(tt_B);
 }
 
@@ -85,7 +88,7 @@ void C(uint64_t parent1, uint64_t parent2) {
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
-    resource.instance_id = gettid();
+    resource.instance_id = mygettid();
     TASKTIMER_START(tt_C, &resource);
     D();
     xfer();
@@ -97,16 +100,19 @@ void C(uint64_t parent1, uint64_t parent2) {
 
 void D(void) {
     TASKTIMER_COMMAND_START(__func__);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
     TASKTIMER_COMMAND_STOP();
 }
 
 void E(void) {
     TASKTIMER_COMMAND_START(__func__);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
     TASKTIMER_COMMAND_STOP();
 }
 
 void F(void) {
     TASKTIMER_COMMAND_START(__func__);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
     TASKTIMER_COMMAND_STOP();
 }
 
@@ -125,6 +131,7 @@ void xfer(void) {
     dest_info.instance_id = 0;
     TASKTIMER_DATA_TRANSFER_START(100, sip, "source", source.data(), dip, "dest", dest.data());
     std::copy(std::begin(source), std::end(source), std::begin(dest));
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
     TASKTIMER_DATA_TRANSFER_STOP(100);
 }
 
@@ -140,14 +147,16 @@ int main(int argc, char * argv[]) {
     tasktimer_execution_space_t resource;
     resource.type = TASKTIMER_DEVICE_CPU;
     resource.device_id = 0;
-    resource.instance_id = gettid();
+    resource.instance_id = mygettid();
     TASKTIMER_START(tt, &resource);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
     // yield the task
     TASKTIMER_YIELD(tt);
     // run a "child" task
     A(myguid);
     // resume the task
     TASKTIMER_RESUME(tt, &resource);
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
     // stop the task
     TASKTIMER_STOP(tt);
     // finalize the timer plugin

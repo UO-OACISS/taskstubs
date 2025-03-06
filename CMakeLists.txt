@@ -28,7 +28,7 @@ endif (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 # This directory has a demonstration tool that a measurement
 # library would implement
-add_subdirectory(tool_example)
+add_subdirectory(tool_examples)
 
 ## All the installation things go here ##
 
