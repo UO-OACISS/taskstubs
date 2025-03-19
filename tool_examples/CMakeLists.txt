@@ -31,6 +31,12 @@ if(DEFINED CUDATOOLKIT_HOME OR DEFINED CUDATOOLKIT_ROOT OR DEFINED ENV{CUDATOOLK
     target_include_directories(nvtx_tool PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../timer_plugin/)
     target_compile_definitions(nvtx_tool PRIVATE COMPILE_PLUGIN)
     target_compile_definitions(nvtx_tool PRIVATE _GNU_SOURCE)
+
+    # install the target
+    install(TARGETS nvtx_tool
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+    )
 endif()
 
 # Make a HIP ROCTX example
@@ -42,5 +48,11 @@ if(DEFINED ROCM_PATH OR DEFINED ROCM_HOME OR DEFINED ENV{ROCM_PATH})
     target_include_directories(roctx_tool PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../timer_plugin/)
     target_compile_definitions(roctx_tool PRIVATE COMPILE_PLUGIN)
     target_compile_definitions(roctx_tool PRIVATE _GNU_SOURCE)
+
+    # install the target
+    install(TARGETS roctx_tool
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+    )
 endif()
 
