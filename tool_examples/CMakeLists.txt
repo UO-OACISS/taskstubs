@@ -21,6 +21,8 @@ target_compile_definitions(MyToolC PRIVATE COMPILE_PLUGIN)
 # Enable GNU extensions
 target_compile_definitions(MyToolC PRIVATE _GNU_SOURCE)
 
+# only make the vendor tool implementations in standalone configuration
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 # Make a CUDA NVTX example
 if(DEFINED CUDATOOLKIT_HOME OR DEFINED CUDATOOLKIT_ROOT OR DEFINED ENV{CUDATOOLKIT_HOME})
     find_package(CUDAToolkit REQUIRED)
@@ -55,4 +57,7 @@ if(DEFINED ROCM_PATH OR DEFINED ROCM_HOME OR DEFINED ENV{ROCM_PATH})
         ARCHIVE DESTINATION lib
     )
 endif()
+
+endif(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+
 

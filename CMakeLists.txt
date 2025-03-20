@@ -17,9 +17,12 @@ set(CMAKE_EXE_LINKER_FLAGS -rdynamic)
 # will use to instrument itself
 add_subdirectory(timer_plugin)
 
-# This directory has a demonstration tool that a measurement
-# library would implement
-add_subdirectory(tool_examples)
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    # If we're configuring this project standalone, we want an example tool
+    # This directory has a demonstration tool that a measurement
+    # library would implement
+    add_subdirectory(tool_examples)
+endif (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   # If we're configuring this project standalone, we want testers
