@@ -208,9 +208,9 @@ def main():
     critical_path, project_completion_time = critical_path_method(G)
 
     if inargs.verbose:
-        print("critical path:",critical_path)
-    print("critical path length:",len(critical_path))
-    print("critical path optimal time:",project_completion_time * 1.0e-6,"seconds")
+        print("Critical path:",critical_path)
+    print("Critical path length:",len(critical_path))
+    print("Critical path optimal time:",project_completion_time * 1.0e-6,"seconds")
 
     if inargs.draw:
         nx.draw(G,with_labels=True,nodelist=critical_path,font_size=6)

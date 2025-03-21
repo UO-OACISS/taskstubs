@@ -54,6 +54,9 @@ foreach(header ${public_headers})
     )
 endforeach()
 
+install(FILES analysis/critical-path.py
+    DESTINATION ${CMAKE_INSTALL_BINDIR})
+
 # install the target and create export-set
 install(TARGETS timer_plugin
     EXPORT "${PROJECT_NAME}Targets"
