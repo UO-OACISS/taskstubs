@@ -23,7 +23,7 @@ parser.add_argument("--main-task", dest="main_task", default="1", required=False
                     help="The main task GUID")
 parser.add_argument("--filename", dest="filename", default=None, required=False, type=str, help="The filename to parse (default is trace_events.*.json.gz)")
 
-def critical_path_method(graph):
+def critical_path_method(graph, root):
     """
     Calculates the critical path of a project represented as a directed acyclic graph.
 
@@ -35,6 +35,8 @@ def critical_path_method(graph):
             - The critical path as a list of task names.
             - The project completion time.
     """
+    starttime = graph.nodes[root]["ts"]
+    endtime = starttime + graph.nodes[root]["duration"]
 
     # Forward pass
     for node in nx.topological_sort(graph):
@@ -43,6 +45,7 @@ def critical_path_method(graph):
             est = max(est, graph.nodes[predecessor]["eft"])
         graph.nodes[node]["est"] = est
         graph.nodes[node]["eft"] = est + graph.nodes[node]["duration"]
+        endtime = max(endtime, (graph.nodes[node]["ts"] + graph.nodes[node]["duration"]))
 
     # Backward pass
     for node in reversed(list(nx.topological_sort(graph))):
@@ -64,7 +67,8 @@ def critical_path_method(graph):
           critical_path.append(node)
       project_completion_time = max(project_completion_time, graph.nodes[node]["eft"])
 
-    return critical_path, project_completion_time
+    actual = endtime - starttime
+    return critical_path, actual, project_completion_time
 
 # This function creates a test graph
 def dummy():
@@ -173,10 +177,11 @@ def readGraph(inargs):
                 args = line["args"]
                 guid = args["GUID"]
                 pguid = args["Parent GUID"]
+                ts = line["ts"]
                 # Set the "main" timer length to 0, so that it doesn't distort our analysis
-                if (guid == inargs.main_task):
-                    dur = 0.0
-                G.add_node(guid, guid=guid, name=name, duration=dur, args=args, pguid=pguid)
+                #if (guid == inargs.main_task):
+                    #dur = 0.0
+                G.add_node(guid, guid=guid, name=name, duration=dur, args=args, pguid=pguid, ts=ts)
                 if isinstance(pguid, list):
                     for P in pguid:
                         if P >= inargs.main_task:
@@ -191,31 +196,55 @@ def readGraph(inargs):
     path = (lastDestroy - firstCreate) * 1.0e-6
     print("Graph has",G.number_of_nodes(),"nodes and",G.size(),"edges.")
     print("Program took",duration,"seconds.")
-    print("Critical path took",path,"seconds.")
+    print("Outermost critical path took",path,"seconds.")
     return G
+
+def get_subgraph_from_node(graph, start_node):
+    if start_node not in graph:
+        raise ValueError("Start node is not in the graph.")
+
+    nodes = set()
+    queue = [(start_node, 0)]  # (node, level)
+    while queue:
+        current_node, current_level = queue.pop(0)
+        nodes.add(current_node)
+
+        for neighbor in graph.neighbors(current_node):
+            if neighbor not in nodes:
+                queue.append((neighbor, current_level + 1))
+    return graph.subgraph(nodes).copy()
 
 def main():
     inargs = parser.parse_args()
     # load the trace as a graph
     # G = dummy()
-    G = readGraph(inargs)
+    fullG = readGraph(inargs)
+    G = get_subgraph_from_node(fullG, inargs.main_task)
 
+    critical_path, actual, project_completion_time = critical_path_method(G, inargs.main_task)
+
+    last_node = str(critical_path[-1])
     if inargs.ascii:
         ascii_graph = nx.generate_network_text(G)
         for line in ascii_graph:
             print(line)
+            if last_node in line:
+                print("...")
+                break
 
-    critical_path, project_completion_time = critical_path_method(G)
-
+    print("Critical path starting at node:", inargs.main_task)
     if inargs.verbose:
-        print("Critical path:",critical_path)
+        print("Critical path nodes:",critical_path)
     print("Critical path length:",len(critical_path))
+    print("Critical path measured time:",actual * 1.0e-6, "seconds")
     print("Critical path optimal time:",project_completion_time * 1.0e-6,"seconds")
 
     if inargs.draw:
-        nx.draw(G,with_labels=True,nodelist=critical_path,font_size=6)
+        #nx.draw(G,with_labels=True,nodelist=critical_path,font_size=6)
+        nx.draw(G,with_labels=True,font_size=6,pos=nx.spring_layout(G))
         plt.draw()
         plt.show()
+
 
 if __name__ == "__main__":
     main()
