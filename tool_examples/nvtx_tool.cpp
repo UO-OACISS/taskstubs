@@ -170,7 +170,7 @@ tasktimer_timer_t tasktimer_create_impl(const tasktimer_function_pointer_t addre
     Dl_info info;
     if (name == nullptr) {
         int rc = dladdr((const void *)address, &info);
-        if (rc == 0 || info.dli_sname == nullptr) { 
+        if (rc == 0 || info.dli_sname == nullptr) {
         } else {
             //node->info.filename = strdup(info.dli_fname);
             tmpstr = info.dli_sname;
@@ -239,7 +239,7 @@ void tasktimer_data_transfer_start_impl(tasktimer_guid_t guid,
         ss += std::string(",");
         ss += std::to_string(space->instance_id);
         return ss;
-    };  
+    };
     std::string tmpstr{"Data Transfer "};
     tmpstr += getspace(source_type);
     tmpstr += std::string(" -> ");
@@ -269,16 +269,14 @@ void tasktimer_command_stop_impl(void) {
 
 void tasktimer_sample_value_impl(const char* name, const double value) {
     nvtxStringHandle_t message = registerString(name);
-    eventAttrib = {0};
+    nvtxEventAttributes_t eventAttrib = {0};
     eventAttrib.version = NVTX_VERSION;
     eventAttrib.size = NVTX_EVENT_ATTRIB_STRUCT_SIZE;
     eventAttrib.messageType = NVTX_MESSAGE_TYPE_REGISTERED;
     eventAttrib.message.registered = message;
     eventAttrib.payloadType = NVTX_PAYLOAD_TYPE_DOUBLE;
     eventAttrib.payload.dValue = value;
-    if (doCreate) {
-        doMarker(label, eventAttrib);
-    }
+    doMarker(name, eventAttrib);
 }
 
 void tasktimer_mark_impl(const char* label) {
