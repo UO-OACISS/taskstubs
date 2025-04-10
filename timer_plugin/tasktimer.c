@@ -25,6 +25,8 @@ tasktimer_data_transfer_start_t* tasktimer_data_transfer_start_func = NULL;
 tasktimer_data_transfer_stop_t* tasktimer_data_transfer_stop_func = NULL;
 tasktimer_command_start_t* tasktimer_command_start_func = NULL;
 tasktimer_command_stop_t* tasktimer_command_stop_func = NULL;
+tasktimer_sample_value_t* tasktimer_sample_value_func = NULL;
+tasktimer_mark_t* tasktimer_mark_func = NULL;
 
 /* After we're confident things are working, remove this. */
 #define ECHO // printf("in %s\n", __func__);
@@ -53,6 +55,8 @@ void tasktimer_initialize(void) {
     tasktimer_data_transfer_stop_func = (tasktimer_data_transfer_stop_t*)(GET_SYMBOL(tasktimer_data_transfer_stop_impl));
     tasktimer_command_start_func = (tasktimer_command_start_t*)(GET_SYMBOL(tasktimer_command_start_impl));
     tasktimer_command_stop_func = (tasktimer_command_stop_t*)(GET_SYMBOL(tasktimer_command_stop_impl));
+    tasktimer_sample_value_func = (tasktimer_sample_value_t*)(GET_SYMBOL(tasktimer_sample_value_impl));
+    tasktimer_mark_func = (tasktimer_mark_t*)(GET_SYMBOL(tasktimer_mark_impl));
 }
 
 /* Finalize the tool */
@@ -181,6 +185,22 @@ void tasktimer_command_stop(void) {
     ECHO
     if (tasktimer_command_stop_func != NULL) {
         tasktimer_command_stop_func();
+    }
+    return;
+}
+
+void tasktimer_sample_value(const char* name, const double value) {
+    ECHO
+    if (tasktimer_sample_value_func != NULL) {
+        tasktimer_sample_value_func(name, value);
+    }
+    return;
+}
+
+void tasktimer_mark(const char* label) {
+    ECHO
+    if (tasktimer_mark_func != NULL) {
+        tasktimer_mark_func(label);
     }
     return;
 }

@@ -31,6 +31,9 @@ tasktimer_data_transfer_start_t tasktimer_data_transfer_start;
 tasktimer_data_transfer_stop_t tasktimer_data_transfer_stop;
 tasktimer_command_start_t tasktimer_command_start;
 tasktimer_command_stop_t tasktimer_command_stop;
+/* counters and markers */
+tasktimer_sample_value_t tasktimer_sample_value;
+tasktimer_mark_t tasktimer_mark;
 
 #ifdef __cplusplus
 }
@@ -74,4 +77,7 @@ tasktimer_command_stop_t tasktimer_command_stop;
         tasktimer_command_start(_type_name)
 #define TASKTIMER_COMMAND_STOP() \
         tasktimer_command_stop()
-
+#define TASKTIMER_SAMPLE_VALUE(_name, _value) \
+        tasktimer_sample_value(_name, _value);
+#define TASKTIMER_MARK(_label) \
+        tasktimer_mark(_label);

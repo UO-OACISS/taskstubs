@@ -15,10 +15,17 @@
 
 /* This simple example is truly overkill, but it tests all aspects of the API. */
 
+#ifdef __APPLE__
+uint64_t gettid(void) {
+    pid_t x = syscall(SYS_thread_selfid);
+    return (uint64_t)(x);
+}
+#else
 uint64_t gettid(void) {
     pid_t x = syscall(__NR_gettid);
     return (uint64_t)(x);
 }
+#endif
 
 uint64_t new_guid(void) {
     static uint64_t count = 0;
@@ -148,6 +155,8 @@ int main(int argc, char * argv[]) {
     TASKTIMER_YIELD(tt);
     // run a "child" task
     A(myguid);
+    TASKTIMER_MARK("marker event");
+    TASKTIMER_SAMPLE_VALUE("sample", 10.0);
     // resume the task
     TASKTIMER_RESUME(tt, &resource);
     // stop the task

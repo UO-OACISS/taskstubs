@@ -267,5 +267,23 @@ void tasktimer_command_stop_impl(void) {
     timer->stop();
 }
 
+void tasktimer_sample_value_impl(const char* name, const double value) {
+    nvtxStringHandle_t message = registerString(name);
+    eventAttrib = {0};
+    eventAttrib.version = NVTX_VERSION;
+    eventAttrib.size = NVTX_EVENT_ATTRIB_STRUCT_SIZE;
+    eventAttrib.messageType = NVTX_MESSAGE_TYPE_REGISTERED;
+    eventAttrib.message.registered = message;
+    eventAttrib.payloadType = NVTX_PAYLOAD_TYPE_DOUBLE;
+    eventAttrib.payload.dValue = value;
+    if (doCreate) {
+        doMarker(label, eventAttrib);
+    }
+}
+
+void tasktimer_mark_impl(const char* label) {
+    doMarker(label);
+}
+
 } // extern "C"
 

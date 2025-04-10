@@ -234,5 +234,13 @@ void tasktimer_command_stop_impl(void) {
     timer->stop();
 }
 
+void tasktimer_sample_value_impl(const char* name, const double value) {
+    // no support :(
+}
+
+void tasktimer_mark_impl(const char* label) {
+    doMarker(std::string(label));
+}
+
 } // extern "C"
 

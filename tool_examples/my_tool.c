@@ -147,6 +147,14 @@ static void command_stop() {
     printf("Command stop\n");
 }
 
+static void sample_value(const char* name, const double value) {
+    printf("sample value %s = %f\n", name, value);
+}
+
+static void mark(const char* label) {
+    printf("mark an event %s\n", label);
+}
+
 void tasktimer_initialize_impl(void) {
     init();
 }
@@ -220,6 +228,14 @@ void tasktimer_command_start_impl(const char* type_name) {
 
 void tasktimer_command_stop_impl(void) {
     command_stop();
+}
+
+void tasktimer_sample_value_impl(const char* name, const double value) {
+    sample_value(name, value);
+}
+
+void tasktimer_mark_impl(const char* label) {
+    mark(label);
 }
 
 

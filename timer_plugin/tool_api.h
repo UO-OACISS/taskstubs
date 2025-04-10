@@ -228,8 +228,38 @@ typedef void tasktimer_data_transfer_start_t(tasktimer_guid_t,
 */
 typedef void tasktimer_data_transfer_stop_t(tasktimer_guid_t);
 
+/**
+ \brief Command start
+
+ Start a standard stack-based timer, 
+ \param timer_name    the name of the timer          
+ \sa @ref tasktimer_command_start_t
+*/
 typedef void tasktimer_command_start_t(const char*);
-typedef void tasktimer_command_stop_t();
+
+/**
+ \brief Command stop
+
+ Stop a standard stack-based timer, 
+ \sa @ref tasktimer_command_start_t
+*/
+typedef void tasktimer_command_stop_t(void);
+
+/**
+ \brief Sample a value
+
+ Sample a value.
+ \sa @ref tasktimer_sample_value_t
+*/
+typedef void tasktimer_sample_value_t(const char*, const double);
+
+/**
+ \brief Mark an event
+
+ Mark and event.
+ \sa @ref tasktimer_mark_t
+*/
+typedef void tasktimer_mark_t(const char*);
 
 #ifdef COMPILE_PLUGIN
 #define PLUGIN_INTERFACE __attribute__((visibility("default")))
@@ -258,6 +288,8 @@ PLUGIN_INTERFACE tasktimer_data_transfer_start_t tasktimer_data_transfer_start;
 PLUGIN_INTERFACE tasktimer_data_transfer_stop_t tasktimer_data_transfer_stop;
 PLUGIN_INTERFACE tasktimer_command_start_t tasktimer_command_start;
 PLUGIN_INTERFACE tasktimer_command_stop_t tasktimer_command_stop;
+PLUGIN_INTERFACE tasktimer_sample_value_t tasktimer_sample_value;
+PLUGIN_INTERFACE tasktimer_mark_t tasktimer_mark;
 #ifdef __cplusplus
 }
 #endif
